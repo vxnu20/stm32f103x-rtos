@@ -1,0 +1,54 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build",
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "--build", "${workspaceFolder}/build",
+        "--target", "all"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Clean",
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "--build", "${workspaceFolder}/build",
+        "--target", "clean"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Flash",
+      "type": "shell",
+      "command": "openocd",
+      "args": [
+        "-f", "interface/stlink-v2.cfg",
+        "-f", "target/stm32f1x.cfg",
+        "-c", "program ${workspaceFolder}/build/${workspaceFolderBasename}.elf verify reset exit"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "All",
+      "dependsOrder": "sequence",
+      "dependsOn": ["Clean", "Build", "Flash"],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    }
+  ]
+}

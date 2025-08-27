@@ -1,0 +1,4 @@
+[submodule "drivers/stm32f103x-driver"]
+	path = drivers/stm32f103x-driver
+	url = git@github.com:vxnu20/stm32f103x-driver.git
+	branch = dev
