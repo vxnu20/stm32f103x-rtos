@@ -5,10 +5,14 @@ project(stm32f103x-base C CXX ASM)
 #set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 11)
 
-
 file(GLOB APP_SOURCES "${CMAKE_SOURCE_DIR}/src/*.c")
 file(GLOB STARTUP_SOURCES "${CMAKE_SOURCE_DIR}/startup/*.c")
 
+# free rtos config
+include(tools/cmake/freertos.cmake)
+add_subdirectory(${FREERTOS_PATH})
+
+# stm32f103x driver
 add_subdirectory(drivers/stm32f103x-driver)
 
 # Executable target (uses project name automatically)
@@ -19,6 +23,17 @@ add_executable(${PROJECT_NAME}
 
 # Common compiler flags
 target_compile_options(${PROJECT_NAME} PRIVATE
+    -mcpu=cortex-m3
+    -mthumb
+    -g
+)
+target_compile_options(freertos_kernel PRIVATE
+    -mcpu=cortex-m3
+    -mthumb
+    -g
+)
+
+target_compile_options(freertos_config INTERFACE
     -mcpu=cortex-m3
     -mthumb
     -g
@@ -41,7 +56,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SOURCE_DIR}/include
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE stm32f103x_driver)
+target_link_libraries(${PROJECT_NAME} PRIVATE stm32f103x_driver freertos_kernel freertos_config)
 
 # Explicitly set output ELF name (otherwise CMake may add extra suffixes)
 set_target_properties(${PROJECT_NAME} PROPERTIES

@@ -2,3 +2,6 @@
 	path = drivers/stm32f103x-driver
 	url = git@github.com:vxnu20/stm32f103x-driver.git
 	branch = dev
+[submodule "external/freertos"]
+	path = external/freertos
+	url = https://github.com/FreeRTOS/FreeRTOS-Kernel.git
