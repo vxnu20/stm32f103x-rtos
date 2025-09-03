@@ -2,6 +2,18 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Generate",
+      "type": "shell",
+      "command": "cmake",
+      "args": [
+        "-B", "${workspaceFolder}/build",
+        "-S", "${workspaceFolder}",
+        "-DCMAKE_TOOLCHAIN_FILE=tools/cmake/arm-gcc-toolchain.cmake"
+      ],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
       "label": "Build",
       "type": "shell",
       "command": "cmake",
@@ -18,10 +30,9 @@
     {
       "label": "Clean",
       "type": "shell",
-      "command": "cmake",
+      "command": "rm",
       "args": [
-        "--build", "${workspaceFolder}/build",
-        "--target", "clean"
+        "-rf", "${workspaceFolder}/build"
       ],
       "group": "build",
       "problemMatcher": []
@@ -44,7 +55,7 @@
     {
       "label": "All",
       "dependsOrder": "sequence",
-      "dependsOn": ["Clean", "Build", "Flash"],
+      "dependsOn": ["Clean", "Generate", "Build", "Flash"],
       "group": {
         "kind": "build",
         "isDefault": false
