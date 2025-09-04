@@ -5,7 +5,7 @@ set(FREERTOS_PORT "GCC_ARM_CM3" CACHE STRING "" FORCE)
 add_library(freertos_config INTERFACE)
 target_include_directories(freertos_config SYSTEM
     INTERFACE
-        ${CMAKE_SOURCE_DIR}/include
+        ${CMAKE_SOURCE_DIR}/include/config
 )
 target_compile_definitions(freertos_config INTERFACE
     projCOVERAGE_TEST=0

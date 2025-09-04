@@ -5,7 +5,7 @@ project(stm32f103x-base C CXX ASM)
 #set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 11)
 
-file(GLOB APP_SOURCES "${CMAKE_SOURCE_DIR}/src/*.c")
+file(GLOB_RECURSE APP_SOURCES "${CMAKE_SOURCE_DIR}/src/*.c")
 file(GLOB STARTUP_SOURCES "${CMAKE_SOURCE_DIR}/startup/*.c")
 
 # free rtos config
@@ -46,14 +46,15 @@ set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/ld/linker.ld)
 target_link_options(${PROJECT_NAME} PRIVATE
     -T${LINKER_SCRIPT}
     -mcpu=cortex-m3
-    -nostdlib
     -nostartfiles
     -Wl,--gc-sections
+    --specs=nano.specs
 )
 
 # Project include headers
 target_include_directories(${PROJECT_NAME} PRIVATE
-    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/include/freertos
+    ${CMAKE_SOURCE_DIR}/include/mcu
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE stm32f103x_driver freertos_kernel freertos_config)
