@@ -1,45 +1,42 @@
-ENTRY(_reset_handler);
+ENTRY(_reset_handler)
 
-MEMORY {
-    flash(rx) : ORIGIN = 0x08000000, LENGTH = 128K
-    sram(rwx) : ORIGIN = 0x20000000, LENGTH = 20K
+MEMORY
+{
+  FLASH (rx) : ORIGIN = 0x08000000, LENGTH = 128K
+  SRAM  (rwx): ORIGIN = 0x20000000, LENGTH = 20K
 }
 
-_stack = ORIGIN(sram) + LENGTH(sram); /* stack points to the end of SRAM */
+/* initial stack symbol */
+_estack = ORIGIN(SRAM) + LENGTH(SRAM);
 
-SECTIONS {
-    
-    .vectors :
-    {
-        KEEP(*(.vectors))
-    } > flash
+SECTIONS
+{
+  .isr_vector :
+  {
+    KEEP(*(.isr_vector))
+  } > FLASH
 
-    .text :
-    {
-        *(.text*)
-    } > flash
+  .text :
+  {
+    *(.text*)
+    *(.rodata*)
+  } > FLASH
 
-    .rodata : 
-    { 
-        *(.rodata*) 
-    } > flash
-
-    .data : 
-    {
-        _sdata = .;     /* Start address of .data in SRAM */
-        *(.data)
-        _edata = .;     /* End address of .data in SRAM */
-    } > sram AT > flash
-
-
+  .data : AT(ADDR(.text) + SIZEOF(.text))
+  {
+    _sdata = .;
+    *(.data*)
+    _edata = .;
+  } > SRAM
     _sidata = LOADADDR(.data);
-    
-    .bss : {
+  .bss (NOLOAD) :
+  {
+    _sbss = .;
+    *(.bss*)
+    *(COMMON)
+    _ebss = .;
+  } > SRAM
 
-        _sbss = .;              /* .bss section start */
-        *(.bss SORT(.bss.*) COMMON)
-        _ebss = .;              /* .bss section end */
-    } > sram
-    
-    end = .;
+  /* stack/top symbol for C code */
+  _end = .;
 }
