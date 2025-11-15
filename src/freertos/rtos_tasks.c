@@ -1,21 +1,27 @@
 #include "mcu_init.h"
 #include "rtos_init.h"
+#include "mpu6050.h"
 
-void vTask1_Handler(void* paramaters)
+
+float temp_value = 0;
+
+void vTask_ReadSensors(void* paramaters)
 {
     for(;;)
-    {    
+    {   temp_value = mpu6050_get_temperature_celsius();
         gpio_pin_toggle(GPIO_PORTC,13);
-        vTaskDelay(1000);
+        vTaskDelay(100);
     }
 }
 
-void vTask2_Handler(void* paramaters)
+void vTask_PublishData(void* paramaters)
 {
     for(;;)
     {
-        gpio_pin_toggle(GPIO_PORTC,13);
-        vTaskDelay(100);
+        //char buffer[40];
+        // sprintf(buffer, "temp in C -> %d\n",(uint8_t)temp_value);
+        // usart_write_string(USART1,buffer);
+        vTaskDelay(500);
     }
     
 }

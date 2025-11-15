@@ -14,6 +14,7 @@ add_subdirectory(${FREERTOS_PATH})
 
 # stm32f103x driver
 add_subdirectory(drivers/stm32f103x-driver)
+add_subdirectory(drivers/mpu6050)
 
 # Executable target (uses project name automatically)
 add_executable(${PROJECT_NAME}
@@ -53,11 +54,12 @@ target_link_options(${PROJECT_NAME} PRIVATE
 
 # Project include headers
 target_include_directories(${PROJECT_NAME} PRIVATE
+    ${CMAKE_SOURCE_DIR}/include/config
     ${CMAKE_SOURCE_DIR}/include/freertos
     ${CMAKE_SOURCE_DIR}/include/mcu
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE stm32f103x_driver freertos_kernel freertos_config)
+target_link_libraries(${PROJECT_NAME} PRIVATE stm32f103x_driver freertos_kernel freertos_config mpu6050)
 
 # Explicitly set output ELF name (otherwise CMake may add extra suffixes)
 set_target_properties(${PROJECT_NAME} PROPERTIES
